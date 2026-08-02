@@ -7,7 +7,7 @@ import {
   Terminal, Lock, Zap, Activity, Upload, ChevronRight, Cpu,
   ScanLine, AlertOctagon, Package, Moon, Sun, Github, Mail,
   Camera, Key, Users, CreditCard, Trash2, Plus, Copy,
-  ToggleLeft, ToggleRight, Clock, TrendingUp, ExternalLink,
+  ToggleLeft, ToggleRight, Clock, TrendingUp, ExternalLink, AlertCircle,
 } from "lucide-react";
 import { Navbar, Screen } from "./components/Navbar";
 import { Footer } from "./components/Footer";
@@ -192,7 +192,7 @@ function GithubIcon({ className = "w-4 h-4" }: { className?: string }) {
   );
 }
 
-function Field({ label, type="text", placeholder, value, onChange, error, hint }:
+export function Field({ label, type="text", placeholder, value, onChange, error, hint }:
   { label:string; type?:string; placeholder?:string; value?:string; onChange?:(v:string)=>void; error?:string; hint?:string }) {
   const [show, setShow] = useState(false);
   const isPass = type==="password";
@@ -207,7 +207,9 @@ function Field({ label, type="text", placeholder, value, onChange, error, hint }
           placeholder={placeholder}
           value={value}
           onChange={e => onChange?.(e.target.value)}
-          className="w-full bg-transparent px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none font-sans"
+          className={`w-full bg-transparent px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none font-sans ${
+            isPass && !show ? "tracking-widest" : "tracking-normal"
+          }`}
         />
         {isPass && (
           <button type="button" onClick={()=>setShow(s=>!s)} className="pr-3 text-muted-foreground hover:text-foreground transition-colors shrink-0">
@@ -221,6 +223,21 @@ function Field({ label, type="text", placeholder, value, onChange, error, hint }
         </p>
       )}
       {hint && !error && <p className="mt-1 text-xs text-muted-foreground">{hint}</p>}
+    </div>
+  );
+}
+
+export function OrDivider() {
+  return (
+    <div className="relative flex items-center justify-center my-3.5">
+      <div className="absolute inset-0 flex items-center">
+        <div className="w-full border-t border-border/60" />
+      </div>
+      <div className="relative flex justify-center text-xs">
+        <span className="bg-background border border-border/80 text-muted-foreground font-medium uppercase tracking-widest text-[10px] px-2.5 py-0.5 rounded-full shadow-xs">
+          OR
+        </span>
+      </div>
     </div>
   );
 }
@@ -246,103 +263,134 @@ function Avatar({ initials, size="sm" }: { initials:string; size?:"sm"|"md"|"lg"
 }
 
 // ─── Auth Layout ──────────────────────────────────────────────────────────────
-function AuthCard({ children, onNav, dark, toggleDark, title, subtitle }:
+export function AuthCard({ children, onNav, dark, toggleDark, title, subtitle }:
   { children:React.ReactNode; onNav:(s:Screen)=>void; dark:boolean; toggleDark:()=>void; title:string; subtitle:string }) {
+  const [legalModal, setLegalModal] = useState<"privacy" | "terms" | null>(null);
+
   return (
-    <div className="min-h-screen bg-background text-foreground grid lg:grid-cols-2 font-sans">
-      {/* Left Form Panel */}
-      <div className="flex flex-col justify-between p-6 sm:p-10 md:p-12 min-h-screen border-r border-border/40">
-        {/* Header Bar */}
-        <div className="flex items-center justify-between">
-          <button onClick={()=>onNav("landing")} className="flex items-center gap-2.5 hover:opacity-85 transition-opacity cursor-pointer">
-            <div className="w-8 h-8 rounded-md bg-blue-600 flex items-center justify-center text-white font-bold shadow-sm">
-              <Shield size={18} />
+    <div className="min-h-screen bg-background text-foreground font-sans relative flex flex-col items-center justify-between px-4 py-5 sm:px-6 sm:py-7 overflow-hidden selection:bg-blue-500/20">
+      {/* 1. Top Brand Accent Line */}
+      <div className="absolute top-0 inset-x-0 h-[3px] bg-gradient-to-r from-transparent via-blue-600 to-transparent opacity-90 z-20" />
+
+      {/* 2. Clearly Visible Dot Grid Background Pattern (2px dots, 20px spacing, 45% opacity) */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.45] dark:opacity-[0.25]"
+        style={{
+          backgroundImage: `radial-gradient(#cbd5e1 2px, transparent 2px)`,
+          backgroundSize: `20px 20px`
+        }}
+      />
+
+      {/* 3. High-Contrast Blue Radial Glow Centered Behind the Form (14% Center Opacity, 750px Radius) */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[750px] h-[750px] rounded-full bg-[radial-gradient(ellipse_at_center,rgba(37,99,235,0.14)_0%,rgba(37,99,235,0.05)_40%,transparent_70%)] dark:bg-[radial-gradient(ellipse_at_center,rgba(59,130,246,0.22)_0%,rgba(59,130,246,0.06)_45%,transparent_70%)] pointer-events-none blur-3xl z-0" />
+
+      {/* Top Bar (Theme Toggle Pinned to Top Right) */}
+      <div className="w-full max-w-5xl flex items-center justify-end relative z-20">
+        <ThemeToggle dark={dark} toggle={toggleDark} />
+      </div>
+
+      {/* Center Auth Card (Centered Logo -> Frosted Backdrop Panel) */}
+      <div className="w-full max-w-[420px] my-auto py-4 relative z-10 flex flex-col text-left">
+        {/* Centered Logo */}
+        <div className="flex justify-center mb-5">
+          <button
+            onClick={() => onNav("landing")}
+            className="flex items-center gap-2.5 hover:opacity-85 transition-opacity cursor-pointer group"
+          >
+            <div className="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold shadow-md transition-transform group-hover:scale-105">
+              <Shield size={20} />
             </div>
-            <span className="font-bold text-base tracking-tight text-foreground">Solvane</span>
+            <span className="font-bold text-xl tracking-tight text-foreground">Solvane</span>
           </button>
-          <ThemeToggle dark={dark} toggle={toggleDark} />
         </div>
 
-        {/* Center Content Form */}
-        <div className="w-full max-w-sm mx-auto my-auto py-8">
-          <div className="mb-6 text-left">
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground mb-1.5">{title}</h1>
-            <p className="text-sm text-muted-foreground">{subtitle}</p>
+        {/* Form Container Panel with Reduced Internal Padding (p-5 sm:p-6) */}
+        <div className="bg-background/90 dark:bg-background/90 backdrop-blur-md border border-border/80 rounded-2xl p-5 sm:p-6 shadow-xl shadow-slate-950/5">
+          {/* Left-Aligned Form Header */}
+          <div className="mb-4.5 text-left">
+            <h1 className="text-2xl sm:text-[26px] font-bold sm:font-extrabold tracking-tight text-foreground mb-1 leading-tight">{title}</h1>
+            <p className="text-sm text-muted-foreground leading-normal">{subtitle}</p>
           </div>
+
+          {/* Form Body */}
           {children}
         </div>
-
-        {/* Footer */}
-        <div className="text-xs text-muted-foreground pt-4 border-t border-border/40 flex items-center justify-between">
-          <span>© {new Date().getFullYear()} Solvane Inc.</span>
-          <div className="flex items-center gap-4">
-            <button onClick={()=>onNav("docs")} className="hover:text-foreground transition-colors cursor-pointer">Privacy</button>
-            <button onClick={()=>onNav("docs")} className="hover:text-foreground transition-colors cursor-pointer">Terms</button>
-          </div>
-        </div>
       </div>
 
-      {/* Right Branded Panel */}
-      <div className="hidden lg:flex flex-col justify-between p-12 bg-[#090A0F] text-white relative overflow-hidden">
-        {/* Subtle grid pattern background */}
-        <div className="absolute inset-0 opacity-[0.08] pointer-events-none"
-          style={{
-            backgroundImage: `radial-gradient(#ffffff 1px, transparent 1px)`,
-            backgroundSize: `24px 24px`
-          }}
-        />
-
-        {/* Radar / Scan graphic */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] h-[420px] pointer-events-none opacity-40">
-          <div className="w-full h-full rounded-full border border-blue-500/20 flex items-center justify-center relative">
-            <div className="w-[300px] h-[300px] rounded-full border border-blue-500/25 flex items-center justify-center">
-              <div className="w-[180px] h-[180px] rounded-full border border-blue-500/30 flex items-center justify-center">
-                <div className="w-3 h-3 rounded-full bg-blue-500 animate-ping" />
-              </div>
-            </div>
-            {/* Crosshair lines */}
-            <div className="absolute inset-x-0 top-1/2 border-b border-blue-500/20" />
-            <div className="absolute inset-y-0 left-1/2 border-r border-blue-500/20" />
-            
-            {/* Radar scan line */}
-            <div className="absolute inset-0 rounded-full bg-[conic-gradient(from_0deg,transparent_0_300deg,rgba(37,99,235,0.25)_360deg)] animate-[spin_8s_linear_infinite]" />
-
-            {/* Scan Nodes */}
-            <div className="absolute top-16 right-24 bg-blue-950/80 border border-blue-500/30 rounded-md px-2.5 py-1 text-[10px] font-mono text-blue-300 flex items-center gap-1.5 backdrop-blur-sm">
-              <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
-              Web Scanner
-            </div>
-            <div className="absolute bottom-20 left-16 bg-indigo-950/80 border border-indigo-500/30 rounded-md px-2.5 py-1 text-[10px] font-mono text-indigo-300 flex items-center gap-1.5 backdrop-blur-sm">
-              <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" />
-              API Fuzzer
-            </div>
-            <div className="absolute top-1/2 right-8 bg-emerald-950/80 border border-emerald-500/30 rounded-md px-2.5 py-1 text-[10px] font-mono text-emerald-300 flex items-center gap-1.5 backdrop-blur-sm">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              APK Decompiler
-            </div>
-          </div>
-        </div>
-
-        {/* Right Panel Header */}
-        <div className="relative z-10 flex items-center justify-between">
-          <span className="text-xs font-mono text-blue-400 bg-blue-500/10 border border-blue-500/20 px-2.5 py-1 rounded-full tracking-wider uppercase">
-            Solvane Security
-          </span>
-        </div>
-
-        {/* Right Panel Bottom Content */}
-        <div className="relative z-10 max-w-md">
-          <div className="w-10 h-10 rounded-md bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400 mb-6">
-            <Shield size={20} />
-          </div>
-          <h2 className="text-2xl font-bold tracking-tight text-white mb-3 leading-snug">
-            Find vulnerabilities before attackers do.
-          </h2>
-          <p className="text-sm text-slate-400 leading-relaxed">
-            Continuous automated security analysis across web applications, APIs, and mobile binaries with plain-English remediation diffs.
-          </p>
-        </div>
+      {/* Footer Below Form */}
+      <div className="relative z-10 pt-6 text-xs text-muted-foreground flex items-center justify-center gap-3">
+        <span>© {new Date().getFullYear()} Solvane Inc.</span>
+        <span className="text-border/80">•</span>
+        <button onClick={() => setLegalModal("privacy")} className="hover:text-foreground transition-colors cursor-pointer">
+          Privacy
+        </button>
+        <span className="text-border/80">•</span>
+        <button onClick={() => setLegalModal("terms")} className="hover:text-foreground transition-colors cursor-pointer">
+          Terms
+        </button>
       </div>
+
+      {/* Legal Modal (Privacy / Terms) */}
+      {legalModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
+          <div className="bg-background text-foreground border border-border rounded-xl shadow-2xl max-w-lg w-full p-6 relative max-h-[85vh] flex flex-col text-left">
+            <div className="flex items-center justify-between pb-4 border-b border-border mb-4">
+              <h3 className="text-lg font-bold text-foreground">
+                {legalModal === "privacy" ? "Privacy Policy" : "Terms of Service"}
+              </h3>
+              <button
+                onClick={() => setLegalModal(null)}
+                className="text-muted-foreground hover:text-foreground transition-colors p-1 rounded-md hover:bg-secondary cursor-pointer"
+              >
+                <XCircle size={18} />
+              </button>
+            </div>
+
+            <div className="overflow-y-auto pr-2 space-y-3 text-xs text-muted-foreground leading-relaxed flex-1">
+              {legalModal === "privacy" ? (
+                <>
+                  <p className="font-medium text-foreground">Last updated: August 2026</p>
+                  <p>
+                    At Solvane, we take data privacy and security scan confidentiality extremely seriously. All security scan telemetry, codebase references, and API endpoint details submitted to our platform are encrypted at rest using AES-256 and in transit using TLS 1.3.
+                  </p>
+                  <h4 className="font-semibold text-foreground text-sm pt-2">1. Information Collection</h4>
+                  <p>
+                    We collect minimal account information required for service operation (name, work email, and OAuth identifier). Scan artifacts and source repository ASTs are processed in isolated ephemeral containers.
+                  </p>
+                  <h4 className="font-semibold text-foreground text-sm pt-2">2. Data Retention & Usage</h4>
+                  <p>
+                    We never sell your data or use customer scan targets for public benchmark training. Detailed findings and diffs are retained only for the active lifecycle of your workspace.
+                  </p>
+                </>
+              ) : (
+                <>
+                  <p className="font-medium text-foreground">Last updated: August 2026</p>
+                  <p>
+                    By accessing or using Solvane's automated security analysis tools, you agree to comply with and be bound by these Terms of Service.
+                  </p>
+                  <h4 className="font-semibold text-foreground text-sm pt-2">1. Permitted Security Testing</h4>
+                  <p>
+                    You agree to initiate automated scans, fuzzing, or APK decompilation ONLY on assets, applications, and networks that you own or have explicit authorization to audit.
+                  </p>
+                  <h4 className="font-semibold text-foreground text-sm pt-2">2. Responsible Disclosure</h4>
+                  <p>
+                    Vulnerability findings generated by Solvane are for authorized internal remediation. Misuse of findings for unauthorized exploitation is strictly prohibited.
+                  </p>
+                </>
+              )}
+            </div>
+
+            <div className="pt-4 border-t border-border mt-4 flex justify-end">
+              <button
+                onClick={() => setLegalModal(null)}
+                className="px-4 py-2 bg-primary text-white text-xs font-semibold rounded-md hover:bg-primary/90 transition-colors cursor-pointer"
+              >
+                Got it
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -392,17 +440,17 @@ function LoginScreen({ onNav, dark, toggleDark, onLoginSuccess }: { onNav:(s:Scr
   return (
     <AuthCard onNav={onNav} dark={dark} toggleDark={toggleDark} title="Welcome back" subtitle="Sign in to your account">
       {error && (
-        <div className="mb-4 p-3 rounded-md bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20 text-xs flex items-center gap-2">
+        <div className="mb-3.5 p-3 rounded-md bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20 text-xs flex items-center gap-2">
           <AlertCircle size={14} className="shrink-0" />
           <span>{error}</span>
         </div>
       )}
 
-      <form onSubmit={submit} className="space-y-4">
+      <form onSubmit={submit} className="space-y-3">
         <Field label="Email" type="text" placeholder="name@company.com" value={email} onChange={setEmail} />
         <div>
           <Field label="Password" type="password" placeholder="••••••••" value={pass} onChange={setPass} />
-          <div className="flex justify-end mt-1.5">
+          <div className="flex justify-end mt-1">
             <button type="button" onClick={()=>onNav("forgot")} className="text-xs font-medium text-blue-600 dark:text-blue-400 hover:underline cursor-pointer">
               Forgot password?
             </button>
@@ -416,32 +464,28 @@ function LoginScreen({ onNav, dark, toggleDark, onLoginSuccess }: { onNav:(s:Scr
         </button>
       </form>
 
-      <div className="flex items-center gap-3 my-5">
-        <div className="flex-1 h-px bg-border/60" />
-        <span className="text-xs text-muted-foreground uppercase tracking-wider font-mono text-[10px]">or</span>
-        <div className="flex-1 h-px bg-border/60" />
-      </div>
+      <OrDivider />
 
-      <div className="space-y-2.5">
+      <div className="space-y-2">
         <button
           type="button"
           onClick={() => authApi.triggerOAuth("github")}
-          className="w-full flex items-center justify-start gap-3 border border-border rounded-md px-3.5 py-2.5 text-sm font-medium text-foreground hover:bg-secondary/70 transition-colors cursor-pointer"
+          className="w-full flex items-center justify-center gap-2.5 border border-border rounded-md px-3.5 py-2 text-sm font-medium text-foreground hover:bg-secondary/70 transition-colors cursor-pointer"
         >
           <GithubIcon className="w-4 h-4 text-foreground shrink-0" />
-          <span className="flex-1 text-left">Continue with GitHub</span>
+          <span>Continue with GitHub</span>
         </button>
         <button
           type="button"
           onClick={() => authApi.triggerOAuth("google")}
-          className="w-full flex items-center justify-start gap-3 border border-border rounded-md px-3.5 py-2.5 text-sm font-medium text-foreground hover:bg-secondary/70 transition-colors cursor-pointer"
+          className="w-full flex items-center justify-center gap-2.5 border border-border rounded-md px-3.5 py-2 text-sm font-medium text-foreground hover:bg-secondary/70 transition-colors cursor-pointer"
         >
           <GoogleIcon className="w-4 h-4 shrink-0" />
-          <span className="flex-1 text-left">Continue with Google</span>
+          <span>Continue with Google</span>
         </button>
       </div>
 
-      <p className="text-xs text-muted-foreground mt-6 text-left">
+      <p className="text-xs text-muted-foreground mt-4.5 text-left">
         {"Don't have an account? "}
         <button onClick={()=>onNav("signup")} className="text-blue-600 dark:text-blue-400 font-medium hover:underline cursor-pointer">Sign up</button>
       </p>
@@ -484,14 +528,14 @@ function SignupScreen({ onNav, dark, toggleDark, onLoginSuccess }: { onNav:(s:Sc
   return (
     <AuthCard onNav={onNav} dark={dark} toggleDark={toggleDark} title="Create your account" subtitle="Get started with Solvane">
       {error && (
-        <div className="mb-4 p-3 rounded-md bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20 text-xs flex items-center gap-2">
+        <div className="mb-3.5 p-3 rounded-md bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20 text-xs flex items-center gap-2">
           <AlertCircle size={14} className="shrink-0" />
           <span>{error}</span>
         </div>
       )}
 
-      <form onSubmit={submit} className="space-y-3.5">
-        <div className="grid grid-cols-2 gap-3">
+      <form onSubmit={submit} className="space-y-3">
+        <div className="grid grid-cols-2 gap-2.5">
           <Field label="First name" placeholder="Alex" value={firstName} onChange={setFirstName} />
           <Field label="Last name" placeholder="Chen" value={lastName} onChange={setLastName} />
         </div>
@@ -499,14 +543,14 @@ function SignupScreen({ onNav, dark, toggleDark, onLoginSuccess }: { onNav:(s:Sc
         
         <div>
           <Field label="Password" type="password" placeholder="••••••••" value={pass} onChange={setPass} />
-          <p className={`text-xs mt-1.5 text-left transition-colors ${pass && !strength.isValid ? "text-red-500 dark:text-red-400 font-medium" : "text-muted-foreground"}`}>
+          <p className={`text-xs mt-1 text-left transition-colors ${pass && !strength.isValid ? "text-red-500 dark:text-red-400 font-medium" : "text-muted-foreground"}`}>
             Must be at least 8 characters with a number and a symbol.
           </p>
         </div>
 
         <Field label="Company (optional)" placeholder="Acme Inc." value={company} onChange={setCompany} />
         
-        <label className="flex items-start gap-2 cursor-pointer pt-1 text-left">
+        <label className="flex items-start gap-2 cursor-pointer pt-0.5 text-left">
           <input type="checkbox" checked={agreed} onChange={()=>setAgreed(v=>!v)} className="mt-0.5 rounded accent-blue-600 cursor-pointer" />
           <span className="text-xs text-muted-foreground leading-snug">
             I agree to the{" "}
@@ -516,39 +560,35 @@ function SignupScreen({ onNav, dark, toggleDark, onLoginSuccess }: { onNav:(s:Sc
           </span>
         </label>
         
-        <button type="submit" disabled={!agreed || loading || (pass && !strength.isValid)}
+        <button type="submit" disabled={!agreed || loading || Boolean(pass && !strength.isValid)}
           className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm py-2.5 rounded-md transition-colors disabled:opacity-50 cursor-pointer shadow-none"
         >
           {loading ? <Loader2 size={15} className="animate-spin" /> : null} Create account
         </button>
       </form>
 
-      <div className="flex items-center gap-3 my-4">
-        <div className="flex-1 h-px bg-border/60" />
-        <span className="text-xs text-muted-foreground uppercase tracking-wider font-mono text-[10px]">or</span>
-        <div className="flex-1 h-px bg-border/60" />
-      </div>
+      <OrDivider />
 
-      <div className="space-y-2.5">
+      <div className="space-y-2">
         <button
           type="button"
           onClick={() => authApi.triggerOAuth("github")}
-          className="w-full flex items-center justify-start gap-3 border border-border rounded-md px-3.5 py-2.5 text-sm font-medium text-foreground hover:bg-secondary/70 transition-colors cursor-pointer"
+          className="w-full flex items-center justify-center gap-2.5 border border-border rounded-md px-3.5 py-2 text-sm font-medium text-foreground hover:bg-secondary/70 transition-colors cursor-pointer"
         >
           <GithubIcon className="w-4 h-4 text-foreground shrink-0" />
-          <span className="flex-1 text-left">Continue with GitHub</span>
+          <span>Continue with GitHub</span>
         </button>
         <button
           type="button"
           onClick={() => authApi.triggerOAuth("google")}
-          className="w-full flex items-center justify-start gap-3 border border-border rounded-md px-3.5 py-2.5 text-sm font-medium text-foreground hover:bg-secondary/70 transition-colors cursor-pointer"
+          className="w-full flex items-center justify-center gap-2.5 border border-border rounded-md px-3.5 py-2 text-sm font-medium text-foreground hover:bg-secondary/70 transition-colors cursor-pointer"
         >
           <GoogleIcon className="w-4 h-4 shrink-0" />
-          <span className="flex-1 text-left">Continue with Google</span>
+          <span>Continue with Google</span>
         </button>
       </div>
 
-      <p className="text-xs text-muted-foreground mt-5 text-left">
+      <p className="text-xs text-muted-foreground mt-4 text-left">
         Already have an account?{" "}
         <button onClick={()=>onNav("login")} className="text-blue-600 dark:text-blue-400 font-medium hover:underline cursor-pointer">Log in</button>
       </p>
@@ -690,31 +730,42 @@ function Landing({ onNav, dark, toggleDark }: { onNav:(s:Screen)=>void; dark:boo
       <Navbar currentScreen="landing" onNav={onNav} dark={dark} toggleDark={toggleDark} />
 
       {/* Hero */}
-      <section className="pt-36 pb-24 px-6">
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
+      <section className="pt-32 pb-20 px-6 relative overflow-hidden">
+        {/* Dot Grid Background */}
+        <div
+          className="absolute inset-0 pointer-events-none opacity-[0.35] dark:opacity-[0.20]"
+          style={{
+            backgroundImage: `radial-gradient(#cbd5e1 2px, transparent 2px)`,
+            backgroundSize: `20px 20px`
+          }}
+        />
+        {/* Radial Blue Glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[850px] h-[850px] rounded-full bg-[radial-gradient(ellipse_at_center,rgba(37,99,235,0.12)_0%,rgba(37,99,235,0.04)_45%,transparent_70%)] dark:bg-[radial-gradient(ellipse_at_center,rgba(59,130,246,0.18)_0%,rgba(59,130,246,0.05)_50%,transparent_70%)] pointer-events-none blur-3xl z-0" />
+
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative z-10">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/8 border border-primary/20 text-primary text-[12px] font-mono mb-7">
-              <Zap size={10} /> Public beta — APK scanning live
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 text-[12px] font-mono mb-6">
+              <Zap size={12} /> Public beta — APK scanning live
             </div>
-            <h1 className="text-5xl font-bold tracking-tight leading-[1.08] mb-5">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.1] mb-5 text-foreground">
               Find vulnerabilities<br />
-              <span className="text-primary">before attackers do.</span>
+              <span className="text-blue-600 dark:text-blue-400">before attackers do.</span>
             </h1>
             <p className="text-[17px] text-muted-foreground leading-relaxed mb-8 max-w-lg">
               AI-powered security testing for websites, APIs, and Android apps. Get code-level fixes in minutes — not a 90-page PDF.
             </p>
             {/* Scan bar */}
-            <div className="flex items-center gap-2 bg-secondary border border-border rounded-xl p-1 mb-4 max-w-lg">
+            <div className="flex items-center gap-2 bg-background border border-border/80 rounded-xl p-1.5 mb-4 max-w-lg shadow-sm">
               <div className="flex items-center gap-2 px-3 flex-1">
-                <Terminal size={13} className="text-primary shrink-0" />
+                <Terminal size={14} className="text-blue-600 dark:text-blue-400 shrink-0" />
                 <input value={scanVal} onChange={e=>setScanVal(e.target.value)}
                   placeholder="https://yourapp.com or paste APK…"
                   className="bg-transparent text-[13px] font-mono text-foreground placeholder:text-muted-foreground outline-none flex-1"
                 />
               </div>
               <button onClick={()=>onNav("dashboard")}
-                className="shrink-0 flex items-center gap-1.5 bg-primary text-white text-[13px] font-semibold px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors">
-                Start free scan <ArrowRight size={13} />
+                className="shrink-0 flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-[13px] font-semibold px-4 py-2.5 rounded-md transition-colors cursor-pointer shadow-none">
+                Start free scan <ArrowRight size={14} />
               </button>
             </div>
             <p className="text-[12px] text-muted-foreground font-mono">

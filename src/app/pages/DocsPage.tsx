@@ -99,12 +99,12 @@ export function DocsPage({ onNav, dark, toggleDark }: DocsPageProps) {
 
       <main className="flex-1 pt-14 flex flex-col">
         {/* Top Header bar with search */}
-        <div className="border-b border-border bg-secondary/30 px-6 py-4">
-          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="border-b border-border bg-secondary/30 px-6 py-4 relative overflow-hidden">
+          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative z-10">
             <div className="flex items-center gap-2 text-[13px]">
               <span className="text-muted-foreground">Docs</span>
               <ChevronRight size={12} className="text-muted-foreground" />
-              <span className="text-primary font-medium">{activeCategory}</span>
+              <span className="text-blue-600 dark:text-blue-400 font-semibold">{activeCategory}</span>
               <ChevronRight size={12} className="text-muted-foreground" />
               <span className="font-semibold text-foreground">Quickstart Guide</span>
             </div>
@@ -116,7 +116,7 @@ export function DocsPage({ onNav, dark, toggleDark }: DocsPageProps) {
                 placeholder="Search documentation…"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-4 py-1.5 bg-card border border-border rounded-lg text-[13px] outline-none focus:border-primary/60 transition-colors"
+                className="w-full pl-9 pr-4 py-1.5 bg-background border border-border/80 rounded-md text-[13px] outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-colors"
               />
             </div>
           </div>
@@ -126,7 +126,7 @@ export function DocsPage({ onNav, dark, toggleDark }: DocsPageProps) {
         <div className="max-w-7xl mx-auto w-full flex-1 flex flex-col lg:flex-row">
           {/* Left Sidebar Nav Tree */}
           <aside className="w-full lg:w-64 shrink-0 border-r border-border p-6 bg-card/50">
-            <div className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground mb-4 font-bold">
+            <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-4">
               Documentation Nav
             </div>
             <nav className="space-y-4 text-[13px]">
@@ -165,7 +165,7 @@ export function DocsPage({ onNav, dark, toggleDark }: DocsPageProps) {
           {/* Main Article Content */}
           <article className="flex-1 p-6 md:p-10 max-w-4xl space-y-8">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-[11px] font-mono mb-3">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs font-semibold mb-3">
                 <BookOpen size={12} /> Solvane Platform Docs v2.4
               </div>
               <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-3">
@@ -371,7 +371,7 @@ jobs:
           {/* Right Sidebar: "On this page" Mini TOC */}
           <aside className="w-full lg:w-56 shrink-0 p-6 border-l border-border hidden lg:block">
             <div className="sticky top-20">
-              <div className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground mb-3 font-bold">
+              <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">
                 On This Page
               </div>
               <ul className="space-y-2 text-[12.5px]">

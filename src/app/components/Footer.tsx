@@ -13,10 +13,12 @@ export function Footer({ onNav }: FooterProps) {
           <div>
             <button
               onClick={() => onNav("landing")}
-              className="flex items-center gap-2 mb-3 cursor-pointer text-left"
+              className="flex items-center gap-2.5 mb-3 cursor-pointer text-left group"
             >
-              <Shield size={15} className="text-primary" />
-              <span className="font-bold text-[14px]">Solvane</span>
+              <div className="w-7 h-7 rounded-md bg-blue-600 flex items-center justify-center text-white font-bold shadow-xs transition-transform group-hover:scale-105">
+                <Shield size={15} />
+              </div>
+              <span className="font-bold text-sm tracking-tight text-foreground">Solvane</span>
             </button>
             <p className="text-[12px] text-muted-foreground max-w-xs">
               AI-powered security testing for modern engineering teams.
@@ -24,7 +26,7 @@ export function Footer({ onNav }: FooterProps) {
           </div>
           <div className="grid grid-cols-3 gap-10 text-[12px]">
             <div>
-              <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground mb-3">
+              <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground mb-3 font-semibold">
                 Product
               </div>
               <ul className="space-y-2">
@@ -51,7 +53,7 @@ export function Footer({ onNav }: FooterProps) {
               </ul>
             </div>
             <div>
-              <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground mb-3">
+              <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground mb-3 font-semibold">
                 Developers
               </div>
               <ul className="space-y-2">
@@ -78,7 +80,7 @@ export function Footer({ onNav }: FooterProps) {
               </ul>
             </div>
             <div>
-              <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground mb-3">
+              <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground mb-3 font-semibold">
                 Company
               </div>
               <ul className="space-y-2">
@@ -107,12 +109,12 @@ export function Footer({ onNav }: FooterProps) {
           </div>
         </div>
         <div className="border-t border-border pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p className="text-[11px] text-muted-foreground">© 2025 Solvane Inc. All rights reserved.</p>
+          <p className="text-[11px] text-muted-foreground">© 2026 Solvane Inc. All rights reserved.</p>
           <div className="flex gap-4">
             {["Privacy", "Terms", "Cookies"].map((l) => (
-              <a key={l} href="#" className="text-[11px] text-muted-foreground hover:text-foreground transition-colors">
+              <button key={l} onClick={() => onNav("docs")} className="text-[11px] text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
                 {l}
-              </a>
+              </button>
             ))}
           </div>
         </div>

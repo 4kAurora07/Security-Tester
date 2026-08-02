@@ -123,13 +123,24 @@ export function BlogPage({ onNav, dark, toggleDark }: BlogPageProps) {
 
       <main className="flex-1 pt-14">
         {/* Blog Header & Hero Featured Banner */}
-        <section className="pt-16 pb-12 px-6 bg-gradient-to-b from-primary/5 via-transparent to-transparent">
-          <div className="max-w-7xl mx-auto">
+        <section className="pt-24 pb-12 px-6 relative overflow-hidden">
+          {/* Dot Grid Background */}
+          <div
+            className="absolute inset-0 pointer-events-none opacity-[0.35] dark:opacity-[0.20]"
+            style={{
+              backgroundImage: `radial-gradient(#cbd5e1 2px, transparent 2px)`,
+              backgroundSize: `20px 20px`
+            }}
+          />
+          {/* Radial Blue Glow */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[750px] h-[750px] rounded-full bg-[radial-gradient(ellipse_at_center,rgba(37,99,235,0.12)_0%,rgba(37,99,235,0.03)_50%,transparent_70%)] pointer-events-none blur-3xl z-0" />
+
+          <div className="max-w-7xl mx-auto relative z-10">
             <div className="text-center max-w-2xl mx-auto mb-12">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-[12px] font-mono mb-3">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 text-xs font-semibold mb-3">
                 <BookOpen size={12} /> Solvane Security Research
               </div>
-              <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-3">
+              <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight mb-3 text-foreground">
                 Security Engineering & Research
               </h1>
               <p className="text-[15px] text-muted-foreground leading-relaxed">
@@ -140,7 +151,7 @@ export function BlogPage({ onNav, dark, toggleDark }: BlogPageProps) {
             {/* Featured Post Banner */}
             <div className="bg-card border border-border rounded-3xl overflow-hidden shadow-xl grid md:grid-cols-2 gap-6 items-center">
               <div className="p-8 md:p-12 space-y-4">
-                <div className="flex items-center gap-2 text-[11px] font-mono">
+                <div className="flex items-center gap-2 text-xs">
                   <span className="px-2.5 py-1 rounded-full bg-primary text-white font-bold tracking-wider uppercase">
                     FEATURED RESEARCH
                   </span>
@@ -166,7 +177,7 @@ export function BlogPage({ onNav, dark, toggleDark }: BlogPageProps) {
                     </div>
                   </div>
 
-                  <span className="text-[12px] font-mono text-muted-foreground flex items-center gap-1">
+                  <span className="text-xs text-muted-foreground flex items-center gap-1 font-medium">
                     <Clock size={12} /> 6 min read
                   </span>
                 </div>
@@ -230,14 +241,14 @@ export function BlogPage({ onNav, dark, toggleDark }: BlogPageProps) {
                   <div>
                     {/* Header Banner Graphic */}
                     <div className={`h-40 bg-gradient-to-r ${post.imageBg} p-5 flex items-start justify-between text-white relative`}>
-                      <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-black/40 backdrop-blur-md border border-white/20">
+                      <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-black/40 backdrop-blur-md border border-white/20">
                         {post.category}
                       </span>
                       <PostIcon size={24} className="text-white/60 group-hover:scale-110 transition-transform" />
                     </div>
 
                     <div className="p-6 space-y-3">
-                      <div className="flex items-center gap-2 text-[11px] text-muted-foreground font-mono">
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
                         <Calendar size={12} />
                         <span>{post.date}</span>
                         <span>·</span>
@@ -288,7 +299,7 @@ export function BlogPage({ onNav, dark, toggleDark }: BlogPageProps) {
               <button
                 key={page}
                 onClick={() => setCurrentPage(page)}
-                className={`w-9 h-9 rounded-lg font-mono text-[13px] font-semibold transition-colors cursor-pointer ${
+                className={`w-9 h-9 rounded-md text-xs font-semibold transition-colors cursor-pointer ${
                   currentPage === page
                     ? "bg-primary text-white"
                     : "bg-card border border-border text-muted-foreground hover:text-foreground"

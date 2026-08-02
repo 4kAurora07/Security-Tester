@@ -10,6 +10,7 @@ export type Screen =
   | "signup"
   | "forgot"
   | "verify"
+  | "reset-password"
   | "dashboard"
   | "results"
   | "empty"
@@ -44,14 +45,16 @@ export function Navbar({ currentScreen, onNav, dark, toggleDark }: NavbarProps) 
   ];
 
   return (
-    <nav className="fixed top-0 inset-x-0 z-50 border-b border-border bg-background/90 backdrop-blur-xl">
+    <nav className="fixed top-0 inset-x-0 z-50 border-b border-border/80 bg-background/90 backdrop-blur-xl">
       <div className="max-w-7xl mx-auto px-6 flex items-center h-14 gap-6">
         <button
           onClick={() => onNav("landing")}
-          className="flex items-center gap-2.5 cursor-pointer hover:opacity-85 transition-opacity"
+          className="flex items-center gap-2.5 cursor-pointer hover:opacity-85 transition-opacity group"
         >
-          <Shield size={17} className="text-primary" />
-          <span className="font-bold text-[14px] tracking-tight">Solvane</span>
+          <div className="w-7 h-7 rounded-md bg-blue-600 flex items-center justify-center text-white font-bold shadow-xs transition-transform group-hover:scale-105">
+            <Shield size={15} />
+          </div>
+          <span className="font-bold text-sm tracking-tight text-foreground">Solvane</span>
         </button>
 
         <div className="hidden md:flex items-center gap-6 text-[13px] text-muted-foreground flex-1">
@@ -77,13 +80,13 @@ export function Navbar({ currentScreen, onNav, dark, toggleDark }: NavbarProps) 
           <ThemeToggle dark={dark} toggle={toggleDark} />
           <button
             onClick={() => onNav("login")}
-            className="text-[13px] text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+            className="text-xs font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer px-2.5 py-1.5 rounded-md"
           >
             Log in
           </button>
           <button
             onClick={() => onNav("signup")}
-            className="bg-primary text-white text-[13px] font-semibold px-4 py-1.5 rounded-lg hover:bg-primary/90 transition-colors cursor-pointer"
+            className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-3.5 py-1.5 rounded-md transition-colors cursor-pointer shadow-none"
           >
             Get started free
           </button>
